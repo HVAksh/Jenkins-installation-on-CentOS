@@ -46,3 +46,6 @@ sudo systemctl start jenkins
 echo ""
 echo  "\033[4mShow status of Jenkins.\033[0m"
 echo ""
+
+sudo systemctl status jenkins
+
