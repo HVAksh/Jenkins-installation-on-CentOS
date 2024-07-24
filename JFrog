@@ -1,0 +1,57 @@
+Assignment 1: JFrog Setup
+
+Link i refer:
+
+https://jfrog.com/help/r/jfrog-installation-setup-documentation/install-artifactory-single-node-with-docker
+
+
+go to ec2 machine execute the command if permission denied use sudo su command then execute
+
+mkdir -p $JFROG_HOME/artifactory/var/etc/
+cd $JFROG_HOME/artifactory/var/etc/
+touch ./system.yaml
+chown -R 1030:1030 $JFROG_HOME/artifactory/var
+
+chmod -R 777 $JFROG_HOME/artifactory/var
+
+run the container(No need to pull the image this run command fetch the image from docker hub or registry):
+docker run --name artifactory -v $JFROG_HOME/artifactory/var/:/var/opt/jfrog/artifactory -d -p 8081:8081 -p 8082:8082 releases-docker.jfrog.io/jfrog/artifactory-oss:7.77.5
+
+
+run this below command in it browser with your ec2 instance public ip
+http://<EC2IP>:8082/ui/
+
+
+initial login id - admin
+initial login password - password
+
+after that you need to change your own strong password
+
+
+
+install maven before install java 17 because default is 21
+
+use this command to install
+
+sudo apt install openjdk-17-jre -y
+
+and change the java version default 21 to 17 use this below command
+
+sudo update-alternatives --config java
+
+really want to change java version 17 or 21 press the value of 0, 1, 2
+
+eg
+
+0 21
+1 17
+
+enter the value 1 and hit enter the check the java version it will change
+
+i have attached the image given below
+
+after do the git clone, run mvn clean install -DskipTests command
+
+
+copy the below command and paste it in notepad with single line then execute in ec2 instance inside the target folder
+curl -X PUT -u admin -T kubernetes-configmap-reload-0.0.1-SNAPSHOT.jar http://<EC2IP>:8082/ui/example-repo-local/
